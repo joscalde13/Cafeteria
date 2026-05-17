@@ -4,36 +4,134 @@
             <flux:heading size="xl">{{ __('Dashboard') }}</flux:heading>
             <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Resumen general de la cafetería</p>
         </div>
-        <div
-            class="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-medium border border-neutral-200 text-neutral-600 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-300">
-            <flux:icon name="calendar" class="size-4 text-blue-500" />
-            <span>{{ $fechaGuatemala }}</span>
+        <div class="flex flex-col items-end gap-2">
+
+            <!-- formulario de cerrar sesion -->
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="text-xs font-semibold uppercase tracking-wider text-neutral-500 hover:text-red-600 transition-colors bg-white border border-neutral-200 px-2 py-1 rounded-md flex items-center gap-1.5 hover:border-red-200 hover:bg-red-50 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 dark:hover:border-red-800">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                        </path>
+                    </svg>
+                    Cerrar Sesión
+                </button>
+            </form>
+
+            <div
+                class="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-medium border border-neutral-200 text-neutral-600 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-300">
+                <flux:icon name="calendar" class="size-4 text-blue-500" />
+                <span>{{ $fechaGuatemala }}</span>
+            </div>
         </div>
     </div>
 
-    <!-- Tax Reminders Alert -->
-    @if($impuestosProximos->count() > 0)
-        <div
-            class="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-white p-4 shadow-sm dark:border-amber-800/50 dark:from-amber-900/20 dark:to-neutral-900">
-            <div class="flex items-start gap-3">
-                <div class="rounded-full bg-amber-100 p-2 dark:bg-amber-900/50">
-                    <flux:icon name="bell-alert" class="size-5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-amber-800 dark:text-amber-300">Recordatorios de Impuestos Próximos
-                    </h3>
-                    <div class="mt-1 space-y-1">
-                        @foreach($impuestosProximos as $imp)
-                            <p class="text-sm text-amber-700 dark:text-amber-400/90">
-                                <strong>{{ $imp->nombre }}</strong> — Vence el: {{ $imp->recordatorio_pago->format('d/m/Y') }}
-                                @if($imp->recordatorio_pago->isPast())
-                                    <span class="font-bold text-red-600 dark:text-red-400 ml-1">(Vencido)</span>
+    {{-- Card de Impuesto Mensual (solo admin) --}}
+    @if(auth()->user()->isAdmin())
+        @php
+            $hoyGt = \Carbon\Carbon::now('America/Guatemala');
+            $mesesNombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+            // El impuesto es sobre las ventas del MES ACTUAL
+            $mesImpuesto = $hoyGt->month;
+            $anioImpuesto = $hoyGt->year;
+            $nombreMesImpuesto = $mesesNombres[$mesImpuesto - 1];
+
+            // Ventas del mes actual
+            $ventasMesActual = \App\Models\Venta::whereMonth('fecha', $mesImpuesto)
+                ->whereYear('fecha', $anioImpuesto)
+                ->sum('total');
+            $montoImpuesto = $ventasMesActual * 0.05;
+
+            // Fecha límite: 1ro del mes siguiente (cada 1ro se reinicia el ciclo)
+            $fechaLimite = $hoyGt->copy()->addMonth()->startOfMonth();
+            $diasRestantes = (int) $hoyGt->diffInDays($fechaLimite, false);
+
+            // Estado: rojo si ya venció (no debería pasar con este cálculo), amarillo si quedan días
+            if ($diasRestantes <= 3) {
+                $estado = 'vencido';
+            } else {
+                $estado = 'pendiente';
+            }
+        @endphp
+
+        <div class="mb-6 rounded-xl border shadow-sm overflow-hidden
+            {{ $estado === 'vencido' ? 'border-red-300 dark:border-red-800/60' : '' }}
+            {{ $estado === 'pendiente' ? 'border-amber-300 dark:border-amber-800/60' : '' }}
+            ">
+
+            {{-- Barra superior de color --}}
+            <div class="h-1.5
+                {{ $estado === 'vencido' ? 'bg-gradient-to-r from-red-500 to-red-600' : '' }}
+                {{ $estado === 'pendiente' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : '' }}
+                "></div>
+
+            <div class="bg-white p-5 dark:bg-neutral-900">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    {{-- Icono + Texto principal --}}
+                    <div class="flex items-start gap-4">
+                        <div class="flex size-12 shrink-0 items-center justify-center rounded-xl
+                            {{ $estado === 'vencido' ? 'bg-red-100 dark:bg-red-900/30' : '' }}
+                            {{ $estado === 'pendiente' ? 'bg-amber-100 dark:bg-amber-900/30' : '' }}">
+                            @if($estado === 'vencido')
+                                <flux:icon name="exclamation-triangle" class="size-6 text-red-600 dark:text-red-400" />
+                            @else
+                                <flux:icon name="clock" class="size-6 text-amber-600 dark:text-amber-400" />
+                            @endif
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold
+                                {{ $estado === 'vencido' ? 'text-red-800 dark:text-red-300' : '' }}
+                                {{ $estado === 'pendiente' ? 'text-amber-800 dark:text-amber-300' : '' }}">
+                                @if($estado === 'vencido')
+                                    ⚠️ ¡Quedan {{ $diasRestantes }} día{{ $diasRestantes !== 1 ? 's' : '' }}!
                                 @else
-                                    <span class="ml-1 opacity-75">(En {{ $imp->recordatorio_pago->diffInDays(now()) }} días)</span>
+                                    ⏳ Impuesto de {{ $nombreMesImpuesto }}
+                                @endif
+                            </h3>
+                            <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                                @if($estado === 'vencido')
+                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }} para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto: <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
+                                @else
+                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }} para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto: <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
                                 @endif
                             </p>
-                        @endforeach
+                        </div>
                     </div>
+
+                    {{-- Monto + Fecha --}}
+                    <div class="flex items-center gap-6 sm:text-end">
+                        <div>
+                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Monto a pagar</p>
+                            <p class="mt-0.5 text-xl font-bold
+                                {{ $estado === 'vencido' ? 'text-red-600 dark:text-red-400' : '' }}
+                                {{ $estado === 'pendiente' ? 'text-amber-600 dark:text-amber-400' : '' }}">
+                                Q{{ number_format($montoImpuesto, 2) }}
+                            </p>
+                        </div>
+                        <div class="border-l border-neutral-200 pl-6 dark:border-neutral-700">
+                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Fecha límite</p>
+                            <p class="mt-0.5 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                1 de {{ $mesesNombres[$fechaLimite->month - 1] }} {{ $fechaLimite->year }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Link al módulo de impuestos --}}
+                <div class="mt-4 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+                    <a href="{{ route('impuestos-mensuales.index', ['mes' => $mesImpuesto, 'anio' => $anioImpuesto]) }}"
+                        class="inline-flex items-center gap-1.5 text-xs font-medium
+                        {{ $estado === 'vencido' ? 'text-red-600 hover:text-red-700 dark:text-red-400' : '' }}
+                        {{ $estado === 'pendiente' ? 'text-amber-600 hover:text-amber-700 dark:text-amber-400' : '' }}
+
+                        transition">
+                        Ver detalle del impuesto
+                        <flux:icon name="arrow-right" class="size-3.5" />
+                    </a>
                 </div>
             </div>
         </div>
@@ -108,41 +206,15 @@
     <div class="grid gap-6 lg:grid-cols-3">
         <!-- Sales Chart (Spans 2 columns) -->
         <div
-            class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900 lg:col-span-2">
+            class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900 lg:col-span-3">
             <h3 class="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Ventas - Últimos 7 días</h3>
             <div class="h-64 w-full">
                 <canvas id="ventasChart"></canvas>
             </div>
         </div>
 
-        <!-- Latest Sales -->
-        <div
-            class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900">
-            <h3 class="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Últimas Ventas</h3>
-            @if($ventasRecientes->count() > 0)
-                <div class="space-y-4">
-                    @foreach($ventasRecientes as $venta)
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex size-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800">
-                                    <flux:icon name="user" class="size-4 text-neutral-500" />
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                                        {{ $venta->user->name ?? 'Sistema' }}</p>
-                                    <p class="text-xs text-neutral-500">{{ $venta->created_at->format('h:i A') }}</p>
-                                </div>
-                            </div>
-                            <span
-                                class="text-sm font-bold text-emerald-600 dark:text-emerald-400">Q{{ number_format($venta->total, 2) }}</span>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-neutral-400">Aún no hay ventas registradas.</p>
-            @endif
-        </div>
+
+
 
         <!-- Top Selling Products -->
         <div
@@ -164,7 +236,8 @@
                             @foreach($productosMasVendidos as $prod)
                                 <tr class="border-b border-neutral-100 last:border-0 dark:border-neutral-800">
                                     <td class="py-3 font-medium text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
-                                        {{ $prod->nombre }}</td>
+                                        {{ $prod->nombre }}
+                                    </td>
                                     <td class="py-3 text-center">
                                         <span
                                             class="inline-flex rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">

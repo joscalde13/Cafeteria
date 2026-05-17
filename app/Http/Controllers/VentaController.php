@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleVenta;
-use App\Models\Impuesto;
 use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Http\Request;
@@ -20,10 +19,7 @@ class VentaController extends Controller
     public function create()
     {
         $productos = Producto::where('stock', '>', 0)->orderBy('nombre')->get();
-        $impuesto = Impuesto::where('activo', true)->first();
-        $porcentajeImpuesto = $impuesto ? $impuesto->porcentaje : 12;
-
-        return view('ventas.create', compact('productos', 'porcentajeImpuesto'));
+        return view('ventas.create', compact('productos'));
     }
 
     public function store(Request $request)
@@ -37,7 +33,7 @@ class VentaController extends Controller
         DB::beginTransaction();
 
         try {
-            $subtotal = 0;
+            $total = 0;
             $detalles = [];
 
             foreach ($request->productos as $item) {
@@ -49,7 +45,7 @@ class VentaController extends Controller
                 }
 
                 $subtotalItem = $producto->precio * $item['cantidad'];
-                $subtotal += $subtotalItem;
+                $total += $subtotalItem;
 
                 $detalles[] = [
                     'producto_id' => $producto->id,
@@ -62,16 +58,9 @@ class VentaController extends Controller
                 $producto->decrement('stock', $item['cantidad']);
             }
 
-            $impuesto = Impuesto::where('activo', true)->first();
-            $porcentajeImpuesto = $impuesto ? $impuesto->porcentaje : 12;
-            $montoImpuesto = $subtotal * ($porcentajeImpuesto / 100);
-            $total = $subtotal + $montoImpuesto;
-
             $venta = Venta::create([
                 'user_id' => auth()->id(),
                 'fecha' => now()->toDateString(),
-                'subtotal' => $subtotal,
-                'impuesto' => $montoImpuesto,
                 'total' => $total,
             ]);
 

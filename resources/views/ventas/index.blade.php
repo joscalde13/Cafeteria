@@ -11,11 +11,13 @@
     @if(session('success'))
         <div
             class="mb-4 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-            {{ session('success') }}</div>
+            {{ session('success') }}
+        </div>
     @endif
     @if(session('error'))
         <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            {{ session('error') }}</div>
+            {{ session('error') }}
+        </div>
     @endif
 
     <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
@@ -33,12 +35,6 @@
                         Vendedor</th>
                     <th
                         class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                        Subtotal</th>
-                    <th
-                        class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                        Impuesto</th>
-                    <th
-                        class="px-6 py-3 text-start text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                         Total</th>
                     <th
                         class="px-6 py-3 text-end text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -51,13 +47,11 @@
                         <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-900 dark:text-neutral-100">
                             #{{ $venta->id }}</td>
                         <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                            {{ $venta->fecha->format('d/m/Y') }}</td>
+                            {{ $venta->fecha->format('d/m/Y') }}
+                        </td>
                         <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                            {{ $venta->user->name }}</td>
-                        <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                            Q{{ number_format($venta->subtotal, 2) }}</td>
-                        <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                            Q{{ number_format($venta->impuesto, 2) }}</td>
+                            {{ $venta->user->name }}
+                        </td>
                         <td
                             class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             Q{{ number_format($venta->total, 2) }}</td>
@@ -80,7 +74,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">No hay
+                        <td colspan="5" class="px-6 py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">No hay
                             ventas registradas.</td>
                     </tr>
                 @endforelse

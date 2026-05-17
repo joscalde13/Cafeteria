@@ -8,14 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Venta extends Model
 {
-    protected $fillable = ['user_id', 'fecha', 'subtotal', 'impuesto', 'total'];
+    protected $fillable = ['user_id', 'fecha', 'total'];
 
     protected function casts(): array
     {
         return [
             'fecha' => 'date',
-            'subtotal' => 'decimal:2',
-            'impuesto' => 'decimal:2',
             'total' => 'decimal:2',
         ];
     }

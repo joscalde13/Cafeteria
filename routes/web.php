@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImpuestoController;
+use App\Http\Controllers\ImpuestoMensualController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::redirect('/', '/login');
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('proveedores', ProveedorController::class);
         Route::resource('compras', CompraController::class);
         Route::resource('impuestos', ImpuestoController::class);
+        Route::get('impuestos-mensuales', [ImpuestoMensualController::class, 'index'])->name('impuestos-mensuales.index');
+        Route::get('impuestos-mensuales/pdf', [ImpuestoMensualController::class, 'pdf'])->name('impuestos-mensuales.pdf');
         Route::resource('usuarios', UsuarioController::class)->except(['show']);
     });
 });

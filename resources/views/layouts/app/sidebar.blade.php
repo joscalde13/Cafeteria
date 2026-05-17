@@ -66,6 +66,11 @@
 
                 <flux:sidebar.group :heading="__('Configuración')" class="grid">
 
+                    <flux:sidebar.item icon="receipt-percent" :href="route('impuestos-mensuales.index')"
+                        :current="request()->routeIs('impuestos-mensuales.*')">
+                        {{ __('Impuesto del Mes') }}
+                    </flux:sidebar.item>
+
                     <flux:sidebar.item icon="user-group" :href="route('usuarios.index')"
                         :current="request()->routeIs('usuarios.*')">
                         {{ __('Usuarios') }}

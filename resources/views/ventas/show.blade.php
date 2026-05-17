@@ -52,9 +52,11 @@
                         <tr>
                             <td
                                 class="whitespace-nowrap px-6 py-4 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                                {{ $detalle->producto->nombre }}</td>
+                                {{ $detalle->producto->nombre }}
+                            </td>
                             <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                                {{ $detalle->cantidad }}</td>
+                                {{ $detalle->cantidad }}
+                            </td>
                             <td class="whitespace-nowrap px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
                                 Q{{ number_format($detalle->precio_unitario, 2) }}</td>
                             <td
@@ -64,20 +66,6 @@
                     @endforeach
                 </tbody>
                 <tfoot class="bg-neutral-50 dark:bg-neutral-800">
-                    <tr>
-                        <td colspan="3"
-                            class="px-6 py-3 text-end text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                            Subtotal:</td>
-                        <td class="px-6 py-3 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                            Q{{ number_format($venta->subtotal, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"
-                            class="px-6 py-3 text-end text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                            Impuesto:</td>
-                        <td class="px-6 py-3 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                            Q{{ number_format($venta->impuesto, 2) }}</td>
-                    </tr>
                     <tr>
                         <td colspan="3"
                             class="px-6 py-3 text-end text-sm font-bold text-neutral-900 dark:text-neutral-100">Total:

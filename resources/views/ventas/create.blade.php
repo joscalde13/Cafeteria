@@ -5,7 +5,8 @@
 
     @if(session('error'))
         <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            {{ session('error') }}</div>
+            {{ session('error') }}
+        </div>
     @endif
 
     <div class="mx-auto max-w-4xl">
@@ -72,20 +73,9 @@
                     </div>
                 </div>
 
-                <!-- Totals -->
+                <!-- Total -->
                 <div class="mt-6 border-t border-neutral-200 pt-4 dark:border-neutral-700">
                     <div class="flex flex-col items-end gap-2">
-                        <div class="flex items-center gap-4 text-sm">
-                            <span class="text-neutral-500 dark:text-neutral-400">Subtotal:</span>
-                            <span id="total-subtotal"
-                                class="font-medium text-neutral-900 dark:text-neutral-100">Q0.00</span>
-                        </div>
-                        <div class="flex items-center gap-4 text-sm">
-                            <span class="text-neutral-500 dark:text-neutral-400">IVA
-                                ({{ $porcentajeImpuesto }}%):</span>
-                            <span id="total-impuesto"
-                                class="font-medium text-neutral-900 dark:text-neutral-100">Q0.00</span>
-                        </div>
                         <div class="flex items-center gap-4 text-lg">
                             <span class="font-semibold text-neutral-900 dark:text-neutral-100">Total:</span>
                             <span id="total-general"
@@ -109,7 +99,6 @@
     </div>
 
     <script>
-        const porcentajeImpuesto = {{ $porcentajeImpuesto }};
         let productoIndex = 1;
 
         function agregarProducto() {
@@ -144,7 +133,7 @@
         }
 
         function calcularTotales() {
-            let subtotalGeneral = 0;
+            let total = 0;
             document.querySelectorAll('.producto-row').forEach(row => {
                 const select = row.querySelector('.producto-select');
                 const option = select.options[select.selectedIndex];
@@ -153,14 +142,9 @@
                 const subtotal = precio * cantidad;
 
                 row.querySelector('.subtotal-display').value = `Q${subtotal.toFixed(2)}`;
-                subtotalGeneral += subtotal;
+                total += subtotal;
             });
 
-            const impuesto = subtotalGeneral * (porcentajeImpuesto / 100);
-            const total = subtotalGeneral + impuesto;
-
-            document.getElementById('total-subtotal').textContent = `Q${subtotalGeneral.toFixed(2)}`;
-            document.getElementById('total-impuesto').textContent = `Q${impuesto.toFixed(2)}`;
             document.getElementById('total-general').textContent = `Q${total.toFixed(2)}`;
         }
     </script>

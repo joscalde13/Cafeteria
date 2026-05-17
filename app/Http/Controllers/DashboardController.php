@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Impuesto;
 use App\Models\Producto;
 use App\Models\Venta;
 use Carbon\Carbon;
@@ -50,12 +49,6 @@ class DashboardController extends Controller
             ];
         }
 
-        // Recordatorios de impuestos próximos
-        $impuestosProximos = Impuesto::where('activo', true)
-            ->whereNotNull('recordatorio_pago')
-            ->where('recordatorio_pago', '<=', Carbon::today()->addDays(7))
-            ->get();
-
         return view('dashboard', compact(
             'fechaGuatemala',
             'ventasHoy',
@@ -64,8 +57,7 @@ class DashboardController extends Controller
             'totalCategorias',
             'productosMasVendidos',
             'ventasRecientes',
-            'ventasSemana',
-            'impuestosProximos'
+            'ventasSemana'
         ));
     }
 }
