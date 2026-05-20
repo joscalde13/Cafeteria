@@ -33,7 +33,7 @@
     @if(auth()->user()->isAdmin())
         @php
             $hoyGt = \Carbon\Carbon::now('America/Guatemala');
-            $mesesNombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            $mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
             // El impuesto es sobre las ventas del MES ACTUAL
             $mesImpuesto = $hoyGt->month;
@@ -59,23 +59,23 @@
         @endphp
 
         <div class="mb-6 rounded-xl border shadow-sm overflow-hidden
-            {{ $estado === 'vencido' ? 'border-red-300 dark:border-red-800/60' : '' }}
-            {{ $estado === 'pendiente' ? 'border-amber-300 dark:border-amber-800/60' : '' }}
-            ">
+                {{ $estado === 'vencido' ? 'border-red-300 dark:border-red-800/60' : '' }}
+                {{ $estado === 'pendiente' ? 'border-amber-300 dark:border-amber-800/60' : '' }}
+                ">
 
             {{-- Barra superior de color --}}
             <div class="h-1.5
-                {{ $estado === 'vencido' ? 'bg-gradient-to-r from-red-500 to-red-600' : '' }}
-                {{ $estado === 'pendiente' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : '' }}
-                "></div>
+                    {{ $estado === 'vencido' ? 'bg-gradient-to-r from-red-500 to-red-600' : '' }}
+                    {{ $estado === 'pendiente' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : '' }}
+                    "></div>
 
             <div class="bg-white p-5 dark:bg-neutral-900">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     {{-- Icono + Texto principal --}}
                     <div class="flex items-start gap-4">
                         <div class="flex size-12 shrink-0 items-center justify-center rounded-xl
-                            {{ $estado === 'vencido' ? 'bg-red-100 dark:bg-red-900/30' : '' }}
-                            {{ $estado === 'pendiente' ? 'bg-amber-100 dark:bg-amber-900/30' : '' }}">
+                                {{ $estado === 'vencido' ? 'bg-red-100 dark:bg-red-900/30' : '' }}
+                                {{ $estado === 'pendiente' ? 'bg-amber-100 dark:bg-amber-900/30' : '' }}">
                             @if($estado === 'vencido')
                                 <flux:icon name="exclamation-triangle" class="size-6 text-red-600 dark:text-red-400" />
                             @else
@@ -84,19 +84,23 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold
-                                {{ $estado === 'vencido' ? 'text-red-800 dark:text-red-300' : '' }}
-                                {{ $estado === 'pendiente' ? 'text-amber-800 dark:text-amber-300' : '' }}">
+                                    {{ $estado === 'vencido' ? 'text-red-800 dark:text-red-300' : '' }}
+                                    {{ $estado === 'pendiente' ? 'text-amber-800 dark:text-amber-300' : '' }}">
                                 @if($estado === 'vencido')
-                                    ⚠️ ¡Quedan {{ $diasRestantes }} día{{ $diasRestantes !== 1 ? 's' : '' }}!
+                                    ¡Quedan {{ $diasRestantes }} día{{ $diasRestantes !== 1 ? 's' : '' }}!
                                 @else
-                                    ⏳ Impuesto de {{ $nombreMesImpuesto }}
+                                    Impuesto de {{ $nombreMesImpuesto }}
                                 @endif
                             </h3>
                             <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                                 @if($estado === 'vencido')
-                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }} para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto: <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
+                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }}
+                                    para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto:
+                                    <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
                                 @else
-                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }} para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto: <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
+                                    Le quedan <strong>{{ $diasRestantes }}</strong> día{{ $diasRestantes !== 1 ? 's' : '' }}
+                                    para pagar el impuesto de <strong>{{ $nombreMesImpuesto }}</strong>. Monto:
+                                    <strong>Q{{ number_format($montoImpuesto, 2) }}</strong>
                                 @endif
                             </p>
                         </div>
@@ -105,15 +109,17 @@
                     {{-- Monto + Fecha --}}
                     <div class="flex items-center gap-6 sm:text-end">
                         <div>
-                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Monto a pagar</p>
+                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                                Monto a pagar</p>
                             <p class="mt-0.5 text-xl font-bold
-                                {{ $estado === 'vencido' ? 'text-red-600 dark:text-red-400' : '' }}
-                                {{ $estado === 'pendiente' ? 'text-amber-600 dark:text-amber-400' : '' }}">
+                                    {{ $estado === 'vencido' ? 'text-red-600 dark:text-red-400' : '' }}
+                                    {{ $estado === 'pendiente' ? 'text-amber-600 dark:text-amber-400' : '' }}">
                                 Q{{ number_format($montoImpuesto, 2) }}
                             </p>
                         </div>
                         <div class="border-l border-neutral-200 pl-6 dark:border-neutral-700">
-                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Fecha límite</p>
+                            <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                                Fecha límite</p>
                             <p class="mt-0.5 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                                 1 de {{ $mesesNombres[$fechaLimite->month - 1] }} {{ $fechaLimite->year }}
                             </p>
@@ -125,10 +131,10 @@
                 <div class="mt-4 border-t border-neutral-100 pt-3 dark:border-neutral-800">
                     <a href="{{ route('impuestos-mensuales.index', ['mes' => $mesImpuesto, 'anio' => $anioImpuesto]) }}"
                         class="inline-flex items-center gap-1.5 text-xs font-medium
-                        {{ $estado === 'vencido' ? 'text-red-600 hover:text-red-700 dark:text-red-400' : '' }}
-                        {{ $estado === 'pendiente' ? 'text-amber-600 hover:text-amber-700 dark:text-amber-400' : '' }}
+                            {{ $estado === 'vencido' ? 'text-red-600 hover:text-red-700 dark:text-red-400' : '' }}
+                            {{ $estado === 'pendiente' ? 'text-amber-600 hover:text-amber-700 dark:text-amber-400' : '' }}
 
-                        transition">
+                            transition">
                         Ver detalle del impuesto
                         <flux:icon name="arrow-right" class="size-3.5" />
                     </a>
