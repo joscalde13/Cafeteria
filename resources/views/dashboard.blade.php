@@ -59,23 +59,23 @@
         @endphp
 
         <div class="mb-6 rounded-xl border shadow-sm overflow-hidden
-                {{ $estado === 'vencido' ? 'border-red-300 dark:border-red-800/60' : '' }}
-                {{ $estado === 'pendiente' ? 'border-amber-300 dark:border-amber-800/60' : '' }}
-                ">
+                        {{ $estado === 'vencido' ? 'border-red-300 dark:border-red-800/60' : '' }}
+                        {{ $estado === 'pendiente' ? 'border-amber-300 dark:border-amber-800/60' : '' }}
+                        ">
 
             {{-- Barra superior de color --}}
             <div class="h-1.5
-                    {{ $estado === 'vencido' ? 'bg-gradient-to-r from-red-500 to-red-600' : '' }}
-                    {{ $estado === 'pendiente' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : '' }}
-                    "></div>
+                            {{ $estado === 'vencido' ? 'bg-gradient-to-r from-red-500 to-red-600' : '' }}
+                            {{ $estado === 'pendiente' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : '' }}
+                            "></div>
 
             <div class="bg-white p-5 dark:bg-neutral-900">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     {{-- Icono + Texto principal --}}
                     <div class="flex items-start gap-4">
                         <div class="flex size-12 shrink-0 items-center justify-center rounded-xl
-                                {{ $estado === 'vencido' ? 'bg-red-100 dark:bg-red-900/30' : '' }}
-                                {{ $estado === 'pendiente' ? 'bg-amber-100 dark:bg-amber-900/30' : '' }}">
+                                        {{ $estado === 'vencido' ? 'bg-red-100 dark:bg-red-900/30' : '' }}
+                                        {{ $estado === 'pendiente' ? 'bg-amber-100 dark:bg-amber-900/30' : '' }}">
                             @if($estado === 'vencido')
                                 <flux:icon name="exclamation-triangle" class="size-6 text-red-600 dark:text-red-400" />
                             @else
@@ -84,8 +84,8 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold
-                                    {{ $estado === 'vencido' ? 'text-red-800 dark:text-red-300' : '' }}
-                                    {{ $estado === 'pendiente' ? 'text-amber-800 dark:text-amber-300' : '' }}">
+                                            {{ $estado === 'vencido' ? 'text-red-800 dark:text-red-300' : '' }}
+                                            {{ $estado === 'pendiente' ? 'text-amber-800 dark:text-amber-300' : '' }}">
                                 @if($estado === 'vencido')
                                     ¡Quedan {{ $diasRestantes }} día{{ $diasRestantes !== 1 ? 's' : '' }}!
                                 @else
@@ -112,8 +112,8 @@
                             <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                 Monto a pagar</p>
                             <p class="mt-0.5 text-xl font-bold
-                                    {{ $estado === 'vencido' ? 'text-red-600 dark:text-red-400' : '' }}
-                                    {{ $estado === 'pendiente' ? 'text-amber-600 dark:text-amber-400' : '' }}">
+                                            {{ $estado === 'vencido' ? 'text-red-600 dark:text-red-400' : '' }}
+                                            {{ $estado === 'pendiente' ? 'text-amber-600 dark:text-amber-400' : '' }}">
                                 Q{{ number_format($montoImpuesto, 2) }}
                             </p>
                         </div>
@@ -131,10 +131,10 @@
                 <div class="mt-4 border-t border-neutral-100 pt-3 dark:border-neutral-800">
                     <a href="{{ route('impuestos-mensuales.index', ['mes' => $mesImpuesto, 'anio' => $anioImpuesto]) }}"
                         class="inline-flex items-center gap-1.5 text-xs font-medium
-                            {{ $estado === 'vencido' ? 'text-red-600 hover:text-red-700 dark:text-red-400' : '' }}
-                            {{ $estado === 'pendiente' ? 'text-amber-600 hover:text-amber-700 dark:text-amber-400' : '' }}
+                                    {{ $estado === 'vencido' ? 'text-red-600 hover:text-red-700 dark:text-red-400' : '' }}
+                                    {{ $estado === 'pendiente' ? 'text-amber-600 hover:text-amber-700 dark:text-amber-400' : '' }}
 
-                            transition">
+                                    transition">
                         Ver detalle del impuesto
                         <flux:icon name="arrow-right" class="size-3.5" />
                     </a>
@@ -219,119 +219,154 @@
             </div>
         </div>
 
-
-
-
-        <!-- Top Selling Products -->
+        {{-- Ventas Semanales --}}
         <div
             class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900 lg:col-span-3">
-            <h3 class="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Productos Más Vendidos (Este
-                Mes)</h3>
-            @if($productosMasVendidos->count() > 0)
+
+            {{-- Header: Título + Selector + PDF --}}
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+                <div>
+                    <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Ventas Semanales</h3>
+                    <p class="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">
+                        {{ \Carbon\Carbon::parse($inicioSemana)->format('d/m/Y') }} —
+                        {{ \Carbon\Carbon::parse($finSemana)->format('d/m/Y') }}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <select id="semana-selector"
+                        onchange="window.location.href='{{ route('dashboard') }}?semana=' + this.value"
+                        class="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+                        <option value="0" {{ $semanaOffset == 0 ? 'selected' : '' }}>Semana Actual</option>
+                        <option value="1" {{ $semanaOffset == 1 ? 'selected' : '' }}>Semana Pasada</option>
+                        <option value="2" {{ $semanaOffset == 2 ? 'selected' : '' }}>Hace 2 Semanas</option>
+                        <option value="3" {{ $semanaOffset == 3 ? 'selected' : '' }}>Hace 3 Semanas</option>
+                        <option value="4" {{ $semanaOffset == 4 ? 'selected' : '' }}>Hace 4 Semanas</option>
+                    </select>
+                    <a href="{{ route('dashboard.ventas-semanales-pdf', ['semana' => $semanaOffset]) }}"
+                        class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200">
+                        <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        PDF
+                    </a>
+                </div>
+            </div>
+
+            {{-- Tabla de productos --}}
+            @if($ventasSemanales->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-neutral-600 dark:text-neutral-400">
                         <thead
                             class="border-b border-neutral-200 text-xs uppercase text-neutral-500 dark:border-neutral-700 dark:text-neutral-500">
                             <tr>
-                                <th class="py-3 font-medium">Producto</th>
-                                <th class="py-3 font-medium text-center">Unidades Vendidas</th>
-                                <th class="py-3 font-medium text-end">Stock Actual</th>
+                                <th class="py-2.5 font-medium">Producto</th>
+                                <th class="py-2.5 font-medium text-center">Cantidad</th>
+                                <th class="py-2.5 font-medium text-end">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($productosMasVendidos as $prod)
+                            @foreach($ventasSemanales as $item)
                                 <tr class="border-b border-neutral-100 last:border-0 dark:border-neutral-800">
-                                    <td class="py-3 font-medium text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
-                                        {{ $prod->nombre }}
+                                    <td class="py-2.5 font-medium text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
+                                        {{ $item->producto }}
                                     </td>
-                                    <td class="py-3 text-center">
+                                    <td class="py-2.5 text-center">
                                         <span
-                                            class="inline-flex rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                                            {{ $prod->total_vendido }}
+                                            class="inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                            {{ $item->cantidad }}
                                         </span>
                                     </td>
-                                    <td class="py-3 text-end">
-                                        <span
-                                            class="text-neutral-500 @if($prod->stock < 10) font-bold text-red-500 @endif">{{ $prod->stock }}</span>
-                                    </td>
+                                    <td class="py-2.5 text-end font-medium">Q{{ number_format($item->total, 2) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+
+                {{-- Total semanal --}}
+                <div
+                    class="mt-4 flex items-center justify-end gap-3 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+                    <span class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Total
+                        de la Semana</span>
+                    <span
+                        class="text-lg font-bold text-emerald-600 dark:text-emerald-400">Q{{ number_format($totalSemanal, 2) }}</span>
+                </div>
             @else
-                <p class="text-sm text-neutral-400">No hay información de ventas este mes.</p>
+                <p class="text-sm text-neutral-400 py-4 text-center">No hay ventas registradas en esta semana.</p>
             @endif
         </div>
-    </div>
 
-    <!-- Scripts para gráficas -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-    <script>
-        const ctx = document.getElementById('ventasChart').getContext('2d');
 
-        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: {!! json_encode(collect($ventasSemana)->pluck('fecha')) !!},
-                datasets: [{
-                    label: 'Ventas (Q)',
-                    data: {!! json_encode(collect($ventasSemana)->pluck('total')) !!},
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: isDarkMode ? '#171717' : '#fff',
-                        titleColor: isDarkMode ? '#e5e5e5' : '#171717',
-                        bodyColor: isDarkMode ? '#a3a3a3' : '#525252',
-                        borderColor: isDarkMode ? '#404040' : '#e5e5e5',
-                        borderWidth: 1,
-                        padding: 10,
-                        displayColors: false,
-                        callbacks: {
-                            label: function (context) {
-                                return 'Total: Q' + context.parsed.y.toFixed(2);
+
+        <!-- Scripts para gráficas -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+        <script>
+            const ctx = document.getElementById('ventasChart').getContext('2d');
+
+            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode(collect($ventasSemana)->pluck('fecha')) !!},
+                    datasets: [{
+                        label: 'Ventas (Q)',
+                        data: {!! json_encode(collect($ventasSemana)->pluck('total')) !!},
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDarkMode ? '#171717' : '#fff',
+                            titleColor: isDarkMode ? '#e5e5e5' : '#171717',
+                            bodyColor: isDarkMode ? '#a3a3a3' : '#525252',
+                            borderColor: isDarkMode ? '#404040' : '#e5e5e5',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    return 'Total: Q' + context.parsed.y.toFixed(2);
+                                }
                             }
                         }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: value => 'Q' + value.toFixed(2),
-                            color: isDarkMode ? '#737373' : '#a3a3a3'
-                        },
-                        grid: {
-                            color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
-                        },
-                        border: { display: false }
                     },
-                    x: {
-                        ticks: {
-                            color: isDarkMode ? '#737373' : '#a3a3a3'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => 'Q' + value.toFixed(2),
+                                color: isDarkMode ? '#737373' : '#a3a3a3'
+                            },
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                            },
+                            border: { display: false }
                         },
-                        grid: { display: false },
-                        border: { display: false }
+                        x: {
+                            ticks: {
+                                color: isDarkMode ? '#737373' : '#a3a3a3'
+                            },
+                            grid: { display: false },
+                            border: { display: false }
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
 </x-layouts::app>

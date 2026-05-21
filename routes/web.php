@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     */
     Route::middleware(['role:admin,employee'])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard/ventas-semanales-pdf', [DashboardController::class, 'ventasSemanalesPdf'])->name('dashboard.ventas-semanales-pdf');
         Route::resource('ventas', VentaController::class)->except(['edit', 'update']);
         Route::resource('inventario', InventarioController::class)->only(['index', 'create', 'store']);
     });
