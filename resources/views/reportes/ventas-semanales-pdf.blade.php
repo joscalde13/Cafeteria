@@ -166,7 +166,7 @@
 
 <body>
     <div class="header">
-        <h1>Cafetería</h1>
+        <h1>Refacciones Lucy</h1>
         <h2>Reporte de Ventas Semanales</h2>
         <p>{{ \Carbon\Carbon::parse($inicioSemana)->format('d/m/Y') }} —
             {{ \Carbon\Carbon::parse($finSemana)->format('d/m/Y') }}</p>

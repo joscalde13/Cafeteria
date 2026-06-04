@@ -52,9 +52,13 @@ class DashboardController extends Controller
         }
 
         // Ventas semanales agrupadas por producto
-        $semanaOffset = (int) $request->input('semana', 0);
-        $semanaOffset = max(0, min($semanaOffset, 4)); // limitar 0-4
-        [$inicioSemana, $finSemana] = $this->calcularRangoSemana($semanaOffset);
+        $gt = Carbon::now('America/Guatemala');
+        $semanaActual = $gt->weekOfYear;
+        
+        $semanaSeleccionada = (int) $request->input('semana', $semanaActual);
+        $semanaSeleccionada = max(1, min($semanaSeleccionada, $semanaActual)); // limitar de semana 1 a la actual
+        
+        [$inicioSemana, $finSemana] = $this->calcularRangoSemana($semanaSeleccionada, $gt->year);
 
         $ventasSemanales = DB::table('detalle_ventas')
             ->join('productos', 'detalle_ventas.producto_id', '=', 'productos.id')
@@ -82,7 +86,8 @@ class DashboardController extends Controller
             'ventasSemana',
             'ventasSemanales',
             'totalSemanal',
-            'semanaOffset',
+            'semanaSeleccionada',
+            'semanaActual',
             'inicioSemana',
             'finSemana'
         ));
@@ -90,9 +95,13 @@ class DashboardController extends Controller
 
     public function ventasSemanalesPdf(Request $request)
     {
-        $semanaOffset = (int) $request->input('semana', 0);
-        $semanaOffset = max(0, min($semanaOffset, 4));
-        [$inicioSemana, $finSemana] = $this->calcularRangoSemana($semanaOffset);
+        $gt = Carbon::now('America/Guatemala');
+        $semanaActual = $gt->weekOfYear;
+        
+        $semanaSeleccionada = (int) $request->input('semana', $semanaActual);
+        $semanaSeleccionada = max(1, min($semanaSeleccionada, $semanaActual));
+        
+        [$inicioSemana, $finSemana] = $this->calcularRangoSemana($semanaSeleccionada, $gt->year);
 
         $ventasSemanales = DB::table('detalle_ventas')
             ->join('productos', 'detalle_ventas.producto_id', '=', 'productos.id')
@@ -124,11 +133,10 @@ class DashboardController extends Controller
         return $pdf->download("ventas-semanales-{$inicio}-a-{$fin}.pdf");
     }
 
-    private function calcularRangoSemana(int $offset): array
+    private function calcularRangoSemana(int $semana, int $anio): array
     {
-        $gt = Carbon::now('America/Guatemala');
-        $inicioSemana = $gt->copy()->subWeeks($offset)->startOfWeek(Carbon::MONDAY)->toDateString();
-        $finSemana = $gt->copy()->subWeeks($offset)->endOfWeek(Carbon::SUNDAY)->toDateString();
+        $inicioSemana = Carbon::now('America/Guatemala')->setISODate($anio, $semana)->startOfWeek()->toDateString();
+        $finSemana = Carbon::now('America/Guatemala')->setISODate($anio, $semana)->endOfWeek()->toDateString();
 
         return [$inicioSemana, $finSemana];
     }

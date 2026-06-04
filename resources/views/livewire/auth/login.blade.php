@@ -98,7 +98,7 @@
                 @if (Route::has('register'))
                     <div class="mt-8 text-center text-sm font-medium text-stone-500">
                         ¿Trabajas aquí pero no tienes cuenta?
-                        <a href="mailto:admin@cafeteria.com"
+                        <a href="mailto:maydaeu15@gmail.com"
                             class="font-bold text-stone-900 hover:underline underline-offset-4 decoration-2 decoration-stone-300 transition-all">
                             Contactar Admin
                         </a>

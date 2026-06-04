@@ -10,18 +10,21 @@ use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
 {
+    // LISTADO DE VENTAS
     public function index()
     {
         $ventas = Venta::with('user')->latest()->paginate(10);
         return view('ventas.index', compact('ventas'));
     }
 
+    // FORMULARIO DE NUEVA VENTA
     public function create()
     {
         $productos = Producto::where('stock', '>', 0)->orderBy('nombre')->get();
         return view('ventas.create', compact('productos'));
     }
 
+    // GUARDAR NUEVA VENTA
     public function store(Request $request)
     {
         $request->validate([
@@ -78,17 +81,19 @@ class VentaController extends Controller
         }
     }
 
+    // DETALLE DE VENTA
     public function show(Venta $venta)
     {
         $venta->load(['detalles.producto', 'user']);
         return view('ventas.show', compact('venta'));
     }
 
+    // ELIMINAR VENTA Y RESTAURAR STOCK
     public function destroy(Venta $venta)
     {
         DB::beginTransaction();
         try {
-            // Restore stock
+            // RESTAURAR STOCK DE CADA PRODUCTO
             foreach ($venta->detalles as $detalle) {
                 $detalle->producto->increment('stock', $detalle->cantidad);
             }

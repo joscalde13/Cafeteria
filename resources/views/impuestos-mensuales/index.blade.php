@@ -1,10 +1,11 @@
 <x-layouts::app :title="__('Impuesto del Mes')">
+    <!-- ENCABEZADO DE PAGINA -->
     <div class="mb-6">
         <flux:heading size="xl">{{ __('Impuesto del Mes') }}</flux:heading>
         <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Resumen mensual de ventas e impuesto del 5%</p>
     </div>
 
-    <!-- Filtro de Mes y Año -->
+    <!-- FILTRO DE MES Y AÑO -->
     <div
         class="mb-6 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900">
         <form method="GET" action="{{ route('impuestos-mensuales.index') }}" class="flex flex-wrap items-end gap-4">
@@ -34,9 +35,9 @@
         </form>
     </div>
 
-    <!-- Cards Resumen -->
+    <!-- CARDS DE RESUMEN -->
     <div class="mb-6 grid gap-4 sm:grid-cols-3">
-        <!-- Total Ventas -->
+        <!-- TOTAL VENTAS -->
         <div
             class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm hover:shadow-md transition dark:border-neutral-700/50 dark:bg-neutral-900">
             <div class="flex items-center justify-between">
@@ -53,7 +54,7 @@
             </div>
         </div>
 
-        <!-- Impuesto 5% -->
+        <!-- IMPUESTO 5% -->
         <div
             class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm hover:shadow-md transition dark:border-neutral-700/50 dark:bg-neutral-900">
             <div class="flex items-center justify-between">

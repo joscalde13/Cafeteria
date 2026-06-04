@@ -58,10 +58,7 @@
                         :current="request()->routeIs('compras.*')">
                         {{ __('Compras') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('proveedores.index')"
-                        :current="request()->routeIs('proveedores.*')">
-                        {{ __('Proveedores') }}
-                    </flux:sidebar.item>
+                    
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Configuración')" class="grid">

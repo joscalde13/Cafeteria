@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Compra;
-use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
@@ -17,58 +16,70 @@ class CompraController extends Controller implements HasMiddleware
         return ['role:admin'];
     }
 
+    // LISTADO DE COMPRAS
     public function index()
     {
-        $compras = Compra::with('proveedor')->latest()->paginate(10);
+        $compras = Compra::latest()->paginate(10);
         return view('compras.index', compact('compras'));
     }
 
+    // FORMULARIO DE CREACION
     public function create()
     {
-        $proveedores = Proveedor::orderBy('nombre')->get();
-        return view('compras.create', compact('proveedores'));
+        return view('compras.create');
     }
 
+    // GUARDAR NUEVA COMPRA
     public function store(Request $request)
     {
-        $request->validate([
-            'proveedor_id' => 'required|exists:proveedores,id',
+        // VALIDACION DE DATOS
+        $data = $request->validate([
+            'concepto' => 'required|string|max:255',
             'fecha' => 'required|date',
-            'total' => 'required|numeric|min:0',
+            'cantidad' => 'required|numeric|min:0.01',
+            'precio_unitario' => 'required|numeric|min:0',
             'notas' => 'nullable|string|max:1000',
         ]);
 
-        Compra::create($request->only('proveedor_id', 'fecha', 'total', 'notas'));
+        // CALCULO Y PERSISTENCIA
+        $data['total'] = round(((float) $data['cantidad']) * ((float) $data['precio_unitario']), 2);
+        Compra::create($data);
 
         return redirect()->route('compras.index')->with('success', 'Compra registrada exitosamente.');
     }
 
+    // DETALLE DE COMPRA
     public function show(Compra $compra)
     {
-        $compra->load('proveedor');
         return view('compras.show', compact('compra'));
     }
 
+    // FORMULARIO DE EDICION
     public function edit(Compra $compra)
     {
-        $proveedores = Proveedor::orderBy('nombre')->get();
-        return view('compras.edit', compact('compra', 'proveedores'));
+        return view('compras.edit', compact('compra'));
     }
 
+    // ACTUALIZAR COMPRA
     public function update(Request $request, Compra $compra)
     {
-        $request->validate([
-            'proveedor_id' => 'required|exists:proveedores,id',
+        // VALIDACION DE DATOS
+        $data = $request->validate([
+            'concepto' => 'required|string|max:255',
             'fecha' => 'required|date',
-            'total' => 'required|numeric|min:0',
+            'cantidad' => 'required|numeric|min:0.01',
+            'precio_unitario' => 'required|numeric|min:0',
             'notas' => 'nullable|string|max:1000',
         ]);
 
-        $compra->update($request->only('proveedor_id', 'fecha', 'total', 'notas'));
+        // CALCULO Y ACTUALIZACION
+        $data['total'] = round(((float) $data['cantidad']) * ((float) $data['precio_unitario']), 2);
+        $compra->update($data);
 
         return redirect()->route('compras.index')->with('success', 'Compra actualizada exitosamente.');
     }
 
+    // ELIMINAR COMPRA
     public function destroy(Compra $compra)
     {
         $compra->delete();

@@ -1,4 +1,5 @@
 <x-layouts::app :title="$producto->nombre">
+    <!-- ENCABEZADO DE PAGINA -->
     <div class="mb-6 flex items-center justify-between">
         <flux:heading size="xl">{{ $producto->nombre }}</flux:heading>
         <a href="{{ route('productos.index') }}"
@@ -8,8 +9,10 @@
         </a>
     </div>
 
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="mx-auto max-w-2xl">
         <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900">
+            <!-- IMAGEN Y DETALLE DEL PRODUCTO -->
             <div class="flex gap-6">
                 @if($producto->imagen)
                     <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}"

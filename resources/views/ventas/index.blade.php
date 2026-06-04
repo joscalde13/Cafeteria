@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Ventas')">
+    <!-- ENCABEZADO PRINCIPAL -->
     <div class="flex items-center justify-between mb-6">
         <flux:heading size="xl">{{ __('Ventas') }}</flux:heading>
         <a href="{{ route('ventas.create') }}"
@@ -8,6 +9,7 @@
         </a>
     </div>
 
+    <!-- MENSAJES DE SESION -->
     @if(session('success'))
         <div
             class="mb-4 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
@@ -20,6 +22,7 @@
         </div>
     @endif
 
+    <!-- TABLA DE VENTAS -->
     <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
         <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
             <thead class="bg-neutral-50 dark:bg-neutral-800">

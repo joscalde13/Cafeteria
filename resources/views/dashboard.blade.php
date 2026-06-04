@@ -1,4 +1,5 @@
 <x-layouts::app :title="__('Dashboard')">
+    <!-- ENCABEZADO PRINCIPAL -->
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <flux:heading size="xl">{{ __('Dashboard') }}</flux:heading>
@@ -6,7 +7,7 @@
         </div>
         <div class="flex flex-col items-end gap-2">
 
-            <!-- formulario de cerrar sesion -->
+            <!-- FORMULARIO DE CERRAR SESION -->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit"
@@ -236,13 +237,14 @@
                     <select id="semana-selector"
                         onchange="window.location.href='{{ route('dashboard') }}?semana=' + this.value"
                         class="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
-                        <option value="0" {{ $semanaOffset == 0 ? 'selected' : '' }}>Semana Actual</option>
-                        <option value="1" {{ $semanaOffset == 1 ? 'selected' : '' }}>Semana Pasada</option>
-                        <option value="2" {{ $semanaOffset == 2 ? 'selected' : '' }}>Hace 2 Semanas</option>
-                        <option value="3" {{ $semanaOffset == 3 ? 'selected' : '' }}>Hace 3 Semanas</option>
-                        <option value="4" {{ $semanaOffset == 4 ? 'selected' : '' }}>Hace 4 Semanas</option>
+                        @for ($i = $semanaActual; $i >= 1; $i--)
+                            <option value="{{ $i }}" {{ $semanaSeleccionada == $i ? 'selected' : '' }}>
+                                Semana {{ $i }}
+                                @if($i === $semanaActual) (Actual) @endif
+                            </option>
+                        @endfor
                     </select>
-                    <a href="{{ route('dashboard.ventas-semanales-pdf', ['semana' => $semanaOffset]) }}"
+                    <a href="{{ route('dashboard.ventas-semanales-pdf', ['semana' => $semanaSeleccionada]) }}"
                         class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200">
                         <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -1,4 +1,5 @@
 <x-layouts::app :title="'Venta #' . $venta->id">
+    <!-- ENCABEZADO DE PAGINA -->
     <div class="mb-6 flex items-center justify-between">
         <flux:heading size="xl">Venta #{{ $venta->id }}</flux:heading>
         <a href="{{ route('ventas.index') }}"
@@ -8,8 +9,9 @@
         </a>
     </div>
 
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="mx-auto max-w-3xl">
-        <!-- Sale Info -->
+        <!-- INFORMACION DE LA VENTA -->
         <div class="mb-6 rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900">
             <dl class="grid gap-4 sm:grid-cols-3">
                 <div>
@@ -28,7 +30,7 @@
             </dl>
         </div>
 
-        <!-- Sale Details -->
+        <!-- DETALLE DE PRODUCTOS -->
         <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
             <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
                 <thead class="bg-neutral-50 dark:bg-neutral-800">

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class InventarioController extends Controller
 {
+    // LISTADO DE MOVIMIENTOS DE INVENTARIO
     public function index()
     {
         $movimientos = MovimientoInventario::with(['producto', 'user'])->latest()->paginate(15);
@@ -15,14 +16,17 @@ class InventarioController extends Controller
         return view('inventario.index', compact('movimientos', 'productos'));
     }
 
+    // FORMULARIO DE NUEVO MOVIMIENTO
     public function create()
     {
         $productos = Producto::orderBy('nombre')->get();
         return view('inventario.create', compact('productos'));
     }
 
+    // GUARDAR MOVIMIENTO DE INVENTARIO
     public function store(Request $request)
     {
+        // VALIDACION DE DATOS
         $request->validate([
             'producto_id' => 'required|exists:productos,id',
             'tipo' => 'required|in:entrada,salida',
@@ -44,7 +48,7 @@ class InventarioController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        // Update stock
+        // ACTUALIZACION DE STOCK
         if ($request->tipo === 'entrada') {
             $producto->increment('stock', $request->cantidad);
         } else {

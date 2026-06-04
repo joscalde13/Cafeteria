@@ -18,19 +18,23 @@ class UsuarioController extends Controller implements HasMiddleware
         return ['role:admin'];
     }
 
+    // LISTADO DE USUARIOS
     public function index()
     {
         $usuarios = User::latest()->paginate(10);
         return view('usuarios.index', compact('usuarios'));
     }
 
+    // FORMULARIO DE CREACION
     public function create()
     {
         return view('usuarios.create');
     }
 
+    // GUARDAR NUEVO USUARIO
     public function store(Request $request)
     {
+        // VALIDACION DE DATOS
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
@@ -48,13 +52,16 @@ class UsuarioController extends Controller implements HasMiddleware
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }
 
+    // FORMULARIO DE EDICION
     public function edit(User $usuario)
     {
         return view('usuarios.edit', compact('usuario'));
     }
 
+    // ACTUALIZAR USUARIO
     public function update(Request $request, User $usuario)
     {
+        // VALIDACION DE DATOS
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $usuario->id,
@@ -77,8 +84,10 @@ class UsuarioController extends Controller implements HasMiddleware
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
+    // ELIMINAR USUARIO
     public function destroy(User $usuario)
     {
+        // VALIDACION: NO SE PUEDE ELIMINAR A SI MISMO
         if ($usuario->id === auth()->id()) {
             return back()->with('error', 'No puedes eliminar tu propia cuenta.');
         }
