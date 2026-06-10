@@ -21,7 +21,7 @@
     @endif
 
     <!-- TABLA DE COMPRAS -->
-    <div class="mb-8 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <div class="mb-8 overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
         <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
             <thead class="bg-neutral-50/90 dark:bg-neutral-800/70">
                 <tr>

@@ -21,7 +21,7 @@
     @endif
 
     <!-- TABLA DE MOVIMIENTOS -->
-    <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+    <div class="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700">
         <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
             <thead class="bg-neutral-50 dark:bg-neutral-800">
                 <tr>
